@@ -1,8 +1,6 @@
 ﻿using System;
 using CommandLine;
 
-using System.ComponentModel;
-
 namespace youtube_to_spotify
 {
     class Program

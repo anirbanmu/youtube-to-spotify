@@ -56,9 +56,17 @@ public class YouTubeApi
         {
             (string key, string value)[] props = { ApiKeyValue, ("maxResults", "50"), ("part", "snippet"), ("playlistId", id) };
             string propsString = props.Aggregate("", (acc, p) => acc + "&" + p.key + "=" + p.value);
-            Uri playlistItemsUri = new Uri(BaseUri, PlaylistItemsApi + "?" + propsString);
-            var json = HttpRequest.Request<ApiResponseContainer<List<PlaylistItem>>>(playlistItemsUri);
-            return json.Items;
+
+            var playlistItems = new List<PlaylistItem>();
+            var json = new ApiResponseContainer<List<PlaylistItem>>();
+            do
+            {
+                Uri playlistItemsUri = new Uri(BaseUri, PlaylistItemsApi + "?" + propsString + "&pageToken=" + json.NextPageToken);
+                json = HttpRequest.Request<ApiResponseContainer<List<PlaylistItem>>>(playlistItemsUri);
+                playlistItems.AddRange(json.Items);
+            } while (json.NextPageToken != null);
+
+            return playlistItems;
         }
         catch(WebException e)
         {

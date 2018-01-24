@@ -13,7 +13,16 @@ public class YouTubeApi
     private readonly (string key, string value) ApiKeyValue;
     public YouTubeApi(string apiKey)
     {
+        ValidateCtorParameters(apiKey);
         ApiKeyValue = ("key", apiKey);
+    }
+
+    private void ValidateCtorParameters(string apiKey)
+    {
+        if (apiKey == null || apiKey == "")
+        {
+            throw new ArgumentException("YouTube API key must be provided.");
+        }
     }
 
     public class ApiResponseContainer<T>
